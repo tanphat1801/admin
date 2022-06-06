@@ -43,9 +43,9 @@ module.exports = (err, req, res, next) => {
 	if (err.statusCode === 401) {
 		res.status(401).redirect('http://localhost:3000/login');
 	} else if (err.statusCode === 403) {
-		res.status(404).render('access-denied');
+		res.status(403).render('access-denied');
 	} else if (err.statusCode === 404) {
-		res.status(403).render('not-found');
+		res.status(404).render('not-found');
 	} else if (err.statusCode === 500) {
 		res.send(err);
 		// res.status(500).render('something-went-wrong');

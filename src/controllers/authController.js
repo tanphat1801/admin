@@ -28,6 +28,7 @@ const sendToken = async (user, statusCode, res) => {
 	if (user.role === 'admin') {
 		res.redirect('/admin');
 	}
+
 	res.redirect('/');
 };
 
@@ -95,7 +96,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.logout = (req, res, next) => {
 	res.clearCookie('jwt');
 	res.clearCookie('user_id');
-	res.status(200).json({ code: 0 });
+	res.redirect('/');
 };
 
 exports.changePassword = catchAsync(async (req, res, next) => {

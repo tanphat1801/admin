@@ -27,7 +27,6 @@ exports.renderAllProducts = catchAsync(async (req, res, next) => {
 		req['products'] = products;
 		next();
 	}
-	// console.log(req);
 });
 
 exports.renderProductByCategory = catchAsync(async (req, res, next) => {

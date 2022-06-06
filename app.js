@@ -6,7 +6,6 @@ const logger = require('morgan');
 
 const authRouter = require('./routes/authRoute');
 const adminRouter = require('./routes/adminRoute');
-const userRouter = require('./routes/userRoute');
 const blogRouter = require('./routes/blogRoute');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
@@ -27,7 +26,6 @@ app.use(cookieParser());
 app.use(express.static(`${__dirname}/public/`));
 
 app.use('/admin', adminRouter);
-app.use('/users', userRouter);
 app.use('/blogs', blogRouter);
 app.use('/products', productRouter);
 app.use('/shopping-cart', cartRouter);

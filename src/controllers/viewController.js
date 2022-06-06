@@ -23,8 +23,19 @@ exports.renderCart = (req, res, next) => {
 	res.render('shopping-cart');
 };
 
+exports.renderAllUsers = (req, res, next) => {
+	res.render('users', { layout: 'admin.hbs', users: req.users });
+};
+
+exports.renderAllUsers = (req, res, next) => {
+	res.render('users', { layout: 'admin.hbs', users: req.users });
+};
+
+exports.renderAllUsers = (req, res, next) => {
+	res.render('users', { layout: 'admin.hbs', users: req.users });
+};
+
 exports.homePage = (req, res, next) => {
-	// console.log({ blogs: [...req.blogLimits], products: req.products });
 	res.render('index', {
 		blogs: [...req.blogLimits],
 		products: req.products,

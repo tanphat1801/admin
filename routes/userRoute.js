@@ -3,20 +3,20 @@ const express = require('express');
 const { protect, restrictTo } = require('../src/controllers/authController');
 
 const {
-	getAllUsers,
-	getUser,
+	renderAllUsers,
 	updateUser,
 	deleteUser,
 } = require('../src/controllers/userController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get('/profile', protect, getUser);
-router.route('/').get(protect, restrictTo('admin'), getAllUsers);
+router.route('/').get(protect, restrictTo('admin'), renderAllUsers);
 router
 	.route('/:id')
-	.get(protect, restrictTo('admin'), getUser)
 	.patch(protect, restrictTo('admin'), updateUser)
 	.delete(protect, restrictTo('admin'), deleteUser);
+router.get('*', (req, res) => {
+	res.send(req.url);
+});
 
 module.exports = router;
