@@ -1,108 +1,137 @@
-<table class='table table-hover mt-4'>
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Gender</th>
-			<th>Telephone</th>
-			<th>Address</th>
-			<th>Action</th>
-		</tr>
-	</thead>
-	<tbody id='table-body'>
-		{{#if users}}
-			{{#each users}}
-				<tr>
-					<td>{{id}}</td>
-					<td>{{name}}</td>
-					<td>{{gender}}</td>
-					<td>{{tel}}</td>
-					<td>{{address}}</td>
-					<td>
-						<a
-							id='edit-btn'
-							class='btn btn-sm btn-primary'
-							href='#'
-							onclick='editModal(dede)'
-						>Edit</a>
-						<a
-							class='btn btn-sm btn-danger'
-							onclick='confirmRemoval()'
-							href='#'
-						>Delete</a>
-					</td>
-				</tr>
-			{{/each}}
-		{{/if}}
+<table class="table table-hover mt-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Telephone</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        {{#if users}}
+            {{#each users}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{gender}}</td>
+                    <td>{{tel}}</td>
+                    <td>{{address}}</td>
+                    <td>
+                        <button
+                            id="edit-btn"
+                            class="btn btn-sm btn-primary"
+                            onclick="editModal({{id}})"
+                        >Edit</button>
+                        <button
+                            class="btn btn-sm btn-danger"
+                            onclick="confirmRemoval()"
+                        >Delete</button>
+                    </td>
+                </tr>
+            {{/each}}
+        {{/if}}
 
-	</tbody>
+    </tbody>
 </table>
 
-<div class='modal fade' id='edit-modal' role='dialog'>
-	<div class='modal-dialog modal-lg'>
+<div class="modal fade" id="edit-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
 
-		<!-- Modal content-->
-		<div class='modal-content'>
-			{{!-- <div class='modal-header'>
-				<h4 class='modal-title'>Edit</h4>
-				<button
-					type='button'
-					class='close'
-					data-dismiss='modal'
-				>&times;</button>
-			</div>
-			<div class='modal-body'>
-				<form
-					method=''
-					action=''
-					class='border rounded w-100 mb-5 mx-auto px-3 pt-3'
-				>
-					<div class='form-group'>
-						<label for='name'>Name</label>
-						<input
-							value='{{name}}'
-							name='name'
-							id='name'
-							type='text'
-							class='form-control'
-						/>
-						<span></span>
-					</div>
-					<div class='form-group'>
-						<label for='password'>Password</label>
-						<input
-							name='password'
-							value=''
-							id='password'
-							type='password'
-							class='form-control'
-							placeholder='Password'
-						/>
-						<span></span>
-					</div>
-					<div class='form-group custom-control custom-checkbox'>
-					</div>
-					<span></span>
-				</form>
-			</div>
-			<div class='modal-footer'>
-				<button
-					type='button'
-					id='delete-button'
-					class='btn btn-primary'
-					data-dismiss='modal'
-				>Save</button>
-				<button
-					type='button'
-					class='btn btn-default'
-					data-dismiss='modal'
-				>Cancel</button>
-			</div> --}}
-		</div>
-	</div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit</h4>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                >&times;</button>
+            </div>
+            <div class="modal-body">
+                <form method="" action="" class="w-100 mx-auto px-3 pt-3">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input
+                            value=""
+                            name="name"
+                            id="name"
+                            type="text"
+                            class="form-control"
+                        />
+                    </div>
+                    <label>
+                        Gender
+                    </label>
+                    <div class="form-row px-4">
+                        <div class="form-check col">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                value="Nam"
+                                name="gender"
+                                id="male"
+                                checked
+                            />
+                            <label class="form-check-label" for="male">
+                                Nam
+                            </label>
+                        </div>
+                        <div class="form-check col">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="gender"
+                                value="Nữ"
+                                id="female"
+                            />
+                            <label class="form-check-label" for="female">
+                                Nữ
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="tel">Telephone</label>
+                        <input
+                            value=""
+                            name="tel"
+                            id="tel"
+                            type="text"
+                            class="form-control"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input
+                            name="address"
+                            value=""
+                            id="address"
+                            class="form-control"
+                        />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    id="delete-button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                >Save</button>
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                >Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-	function editModal(id) { $('.modal-content').append(`<h1>${id}</h1>`)
-	console.log(id) $('#edit-modal').modal({show: true}); }
+    function editModal(obj) {
+        $('#name').val(obj);
+        $('#edit-modal').modal({show: true});
+    }
 </script>
