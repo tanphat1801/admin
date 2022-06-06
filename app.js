@@ -5,6 +5,7 @@ const fileUpload = require('express-fileupload');
 const logger = require('morgan');
 
 const authRouter = require('./routes/authRoute');
+const adminRouter = require('./routes/adminRoute');
 const userRouter = require('./routes/userRoute');
 const blogRouter = require('./routes/blogRoute');
 const productRouter = require('./routes/productRoute');
@@ -25,6 +26,7 @@ app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.static(`${__dirname}/public/`));
 
+app.use('/admin', adminRouter);
 app.use('/users', userRouter);
 app.use('/blogs', blogRouter);
 app.use('/products', productRouter);

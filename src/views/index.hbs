@@ -1,3 +1,4 @@
+
 <!-- Offer -->
 <section id="offer">
     <div id="slide-show" class="carousel slide" data-ride="carousel">
@@ -100,13 +101,15 @@
     <div class="blog-content">
         {{#if blogs}}
             {{#each blogs}}
-                <a class="blog-box media border-top border-bottom py-3" href="{{this.url}}">
-                    <img src="images/uploads/{{this.image}}" alt="blog" class="blog-box-img mr-3">
-                    <div class="blog-box-content media-body">
-                        <h5 class="blog-box-heading">{{this.title}}</h5>
-                        <p class="blog-box-text">{{this.description}}</p>
-                    </div>
-                </a>
+                <div class="border-top border-bottom">
+                    <a class="blog-box media mb-2 py-3" href="{{this.url}}">
+                        <img src="images/uploads/{{this.image}}" alt="blog" class="blog-box-img mr-3">
+                        <div class="blog-box-content media-body">
+                            <h5 class="blog-box-heading">{{this.title}}</h5>
+                            <p class="blog-box-text">{{this.description}}</p>
+                        </div>
+                    </a>
+                </div>
             {{/each}}
         {{/if}}
     </div>

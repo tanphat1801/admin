@@ -1,10 +1,20 @@
+const { Op } = require('sequelize');
 const catchAsync = require('../../utils/catchAsync');
 const User = require('../models/userModel');
 const getInstanceById = require('../../utils/getInstanceById');
+const reduceReturnedData = require('../../utils/reduceReturnedData');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-	const users = await User.findAll();
-	res.send(users);
+	const users = await User.findAll({
+		attributes: ['id', 'name', 'tel', 'address', 'gender'],
+		where: {
+			role: {
+				[Op.ne]: 'admin',
+			},
+		},
+	});
+	req['users'] = reduceReturnedData(users);
+	next();
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {

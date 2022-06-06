@@ -24,6 +24,10 @@ exports.renderCart = (req, res, next) => {
 };
 
 exports.homePage = (req, res, next) => {
-	console.log({ blogs: [...req.blogLimits], products: req.products });
-	res.render('index', { blogs: [...req.blogLimits], products: req.products });
+	// console.log({ blogs: [...req.blogLimits], products: req.products });
+	res.render('index', {
+		blogs: [...req.blogLimits],
+		products: req.products,
+		admin: true,
+	});
 };

@@ -90,6 +90,7 @@ a:hover {
 
 #products-box .card-img {
     width: 60%;
+    object-fit: cover;
 }
 
 #products-box .card-footer i {

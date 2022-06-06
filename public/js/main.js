@@ -154,7 +154,7 @@ window.addEventListener('DOMContentLoaded', async e => {
                         <td data-th="Product">
                             <div class="row">
                                 <div class="col-md-4 col-sm-5">
-                                    <img src="${obj.image}" alt="" class="img-fluid rounded mb-2 shadow">
+                                    <img src="${obj.image}" alt="" class="img-fluid rounded mb-2 shadow w-50">
                                 </div>
                                 <div class="col-md-8 mt-sm-2 col-sm-7">
                                     <h4>${obj.name}</h4>
