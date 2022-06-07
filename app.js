@@ -25,12 +25,16 @@ app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.static(`${__dirname}/public/`));
 
+// app.use('*', (req, res) => {
+// 	return res.send(req.method);
+// });
 app.use('/admin', adminRouter);
 app.use('/blogs', blogRouter);
 app.use('/products', productRouter);
 app.use('/shopping-cart', cartRouter);
 app.use('/', viewRouter, authRouter);
 app.all('*', (req, res, next) => {
+	return res.send(req.params.id);
 	next(new AppError(404));
 });
 

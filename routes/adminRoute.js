@@ -10,6 +10,6 @@ router.get('/', async (req, res, next) => {
 
 router.use('/users', userRouter);
 router.use('/products', productRouter);
-router.use('/blog', blogRouter);
+router.use('/blogs', blogRouter);
 
 module.exports = router;

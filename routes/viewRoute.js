@@ -18,7 +18,7 @@ router.get('/register', signUp);
 router.get('/login', login);
 router.get('/change-password', protect, changePassword);
 router.get('/profile', protect, profile);
-router.get('/shopping-cart', renderCart);
+router.get('/shopping-cart', protect, renderCart);
 router.get('/', renderAllProducts, renderBlogsLimit, homePage);
 
 module.exports = router;

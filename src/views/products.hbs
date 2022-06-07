@@ -3,19 +3,19 @@
         <div class="heading p-3 rounded-top bg-color"><h3>CATEGORIES</h3></div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-action">
-                <a href="/products/baby-and-child-care">Baby & Child Care</a>
+                <a href="{{#if admin}}/admin{{/if}}/products/baby-and-child-care">Baby & Child Care</a>
             </li>
             </li>
             <li class="list-group-item list-group-item-action">
-                <a href="/products/diet-and-nutrition">Diet & Nutrition</a>
+                <a href="{{#if admin}}/admin{{/if}}/products/diet-and-nutrition">Diet & Nutrition</a>
             </li>
 
             <li class="list-group-item list-group-item-action">
-                <a href="/products/natural-supplement">Natural Supplement</a>
+                <a href="{{#if admin}}/admin{{/if}}/products/natural-supplement">Natural Supplement</a>
             </li>
 
             <li class="list-group-item list-group-item-action">
-                <a href="/products/personal-care">Personal Care</a>
+                <a href="{{#if admin}}/admin{{/if}}/products/personal-care">Personal Care</a>
             </li>
         </ul>
     </div>
@@ -42,9 +42,21 @@
                                         <p class="card-quantity">Mô tả: {{description}}</p>
                                     </div>
                                     <div class="card-footer">
+                                        {{#if ../admin}}
+                                       <a
+                                            class='btn btn-sm btn-primary'
+                                            onclick='confirmRemoval()'
+                                            href='#'
+                                        >Edit</a><a
+                                            class='btn btn-sm btn-primary'
+                                            onclick='confirmRemoval()'
+                                            href='#'
+                                        >Delete</a>
+                                        {{else}}
                                         <button class="add-to-cart btn btn-success bg-color border-0" onclick="handleAddCart(this)">
                                             <i class="fa-solid fa-cart-plus text-white"></i>ADD TO CART
                                         </button>
+                                        {{/if}}
                                     </div>
                                 </div>
                             </div>
