@@ -22,11 +22,11 @@
                         <button
                             id="edit-btn"
                             class="btn btn-sm btn-primary"
-                            onclick="editModal({{id}})"
+                            onclick="editModal('{{id}}/{{name}}/{{gender}}/{{tel}}/{{address}}')"
                         >Edit</button>
                         <button
                             class="btn btn-sm btn-danger"
-                            onclick="confirmRemoval()"
+                            onclick="confirmRemoval({{id}})"
                         >Delete</button>
                     </td>
                 </tr>
@@ -131,7 +131,21 @@
 
 <script>
     function editModal(obj) {
-        $('#name').val(obj);
+        obj = obj.split("/");
+        
+        $('#name').val(obj[1]);
+        $('#tel').val(obj[3]);
+        $('#address').val(obj[4]);
+
         $('#edit-modal').modal({show: true});
+    }
+
+    function confirmRemoval(id) {
+            $('#confirm-removal-modal').modal({show: true});
+
+            $('#delete-btn').click(async () => {
+                const response = await fetch("http://localhost:3000/admin/users/" + id, {
+                    method: 'DELETE'})
+            });
     }
 </script>
