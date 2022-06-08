@@ -6,7 +6,7 @@ const reduceReturnedData = require('../../utils/reduceReturnedData');
 
 exports.renderAllUsers = catchAsync(async (req, res, next) => {
 	const users = await User.findAll({
-		attributes: ['id', 'name', 'tel', 'address', 'gender'],
+		attributes: ['id', 'name', 'tel', 'address', 'gender', 'birthday'],
 		where: {
 			role: {
 				[Op.ne]: 'admin',
@@ -38,7 +38,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 	user.update(req.body);
 	await user.save();
-
+	
 	res.json(user);
 });
 
@@ -46,6 +46,11 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 	const user = await getInstanceById(User, req.params.id);
 
 	await user.destroy();
-	const users = await User.findAll();
+	const users = await User.findAll({where: {
+		role: {
+			[Op.ne]: 'admin',
+		},
+	},});
+	
 	res.json(users);
 });

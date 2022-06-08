@@ -3,9 +3,7 @@ db.connect();
 const cartController = {
 	addToCart(req, res, next) {
 		const { user_id, product_id, quantity } = req.body;
-		console.log('cart controller', user_id)
-		const sql =
-			`INSERT INTO cart (user_id, product_id, quantity) 
+		const sql = `INSERT INTO cart (user_id, product_id, quantity) 
 			VALUES(?, ?, ?) 
 			ON DUPLICATE KEY 
 			UPDATE quantity = quantity + 1`;
@@ -38,8 +36,6 @@ const cartController = {
 				toBeUpdated[i] = data[i];
 			}
 		}
-
-		console.log('update to cart model', data, toBeUpdated);
 
 		const params = [];
 		let sql = `UPDATE CART SET `;
@@ -118,7 +114,7 @@ const cartController = {
 			}
 		});
 	},
-	renderItem(req, res, next){
+	renderItem(req, res, next) {
 		const { product_id } = req.body;
 
 		const sql = `SELECT * FROM product WHERE product_id = ?`;
@@ -138,7 +134,7 @@ const cartController = {
 				});
 			}
 		});
-	}
+	},
 };
 
 module.exports = cartController;

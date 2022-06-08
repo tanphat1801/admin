@@ -1,37 +1,40 @@
-<table class="table table-hover mt-4">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Telephone</th>
-            <th>Address</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="table-body">
-        {{#if users}}
-            {{#each users}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{name}}</td>
-                    <td>{{gender}}</td>
-                    <td>{{tel}}</td>
-                    <td>{{address}}</td>
-                    <td>
-                        <button
-                            id="edit-btn"
-                            class="btn btn-sm btn-primary"
-                            onclick="editModal('{{id}}/{{name}}/{{gender}}/{{tel}}/{{address}}')"
-                        >Edit</button>
-                        <button
-                            class="btn btn-sm btn-danger"
-                            onclick="confirmRemoval({{id}})"
-                        >Delete</button>
-                    </td>
-                </tr>
-            {{/each}}
-        {{/if}}
+<table class='table table-hover mt-4'>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Gender</th>
+			<th>Telephone</th>
+			<th>Birthday</th>
+			<th>Address</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody id='table-body'>
+		{{#if users}}
+			{{#each users}}
+				<tr class="row-{{id}}">
+					<td>{{id}}</td>
+					<td class="name">{{name}}</td>
+					<td class="gender">{{gender}}</td>
+					<td class="tel">{{tel}}</td>
+					<td class="birthday">{{birthday}}</td>
+					<td class="address">{{address}}</td>
+					<td>
+						<button
+							id='edit-btn'
+							class='btn btn-sm btn-primary'
+							onclick="editModal('{{id}}/{{name}}/{{gender}}/{{tel}}/{{birthday}}/{{address}}', ['name', 'gender', 'tel', 'birthday', 'address'])"
+						>Edit</button>
+						<button
+							id="delete-btn"
+							class='btn btn-sm btn-danger'
+							onclick="confirmRemoval({{id}}, 'users')"
+						>Delete</button>
+					</td>
+				</tr>
+			{{/each}}
+		{{/if}}
 
 	</tbody>
 </table>
@@ -50,7 +53,7 @@
 				>&times;</button>
 			</div>
 			<div class='modal-body'>
-				<form class='w-100 mx-auto px-3 pt-3 form-edit'>
+				<form class='w-100 mx-auto px-3 pt-3 form-edit' method='post'>
 					<div class='form-group'>
 						<label for='name'>Name</label>
 						<input
@@ -101,6 +104,16 @@
 							class='form-control'
 						/>
 					</div>
+					<div class='form-group mt-3'>
+						<label for='tel'>Birthday</label>
+						<input
+							value=''
+							name='birthday'
+							id='birthday'
+							type='date'
+							class='form-control'
+						/>
+					</div>
 					<div class='form-group'>
 						<label for='address'>Address</label>
 						<input name='address' value='' id='address' class='form-control' />
@@ -120,19 +133,128 @@
 	</div>
 </div>
 
+<div class='modal fade' id='confirm-removal-modal' role='dialog'>
+			<div class='modal-dialog'>
+
+				<!-- Modal content-->
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<h4 class='modal-title'>Xóa </h4>
+						<button
+							type='button'
+							class='close'
+							data-dismiss='modal'
+						>&times;</button>
+					</div>
+					<div class='modal-body'>
+						<p>Bạn có chắc chắn muốn xóa?</p>
+					</div>
+					<div class='modal-footer'>
+						<button
+							type='button'
+							id='confirm-delete-btn'
+							class='btn btn-danger'
+							data-dismiss='modal'
+						>Xóa</button>
+						<button
+							type='button'
+							class='btn btn-default'
+							data-dismiss='modal'
+						>Không</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 <script>
-	function editModal(obj) {
-        obj = obj.split('/');
-        $('#name').val(obj[1]);
-        $('#gender').val(obj[2]);
-        $('#tel').val(obj[3]);
-        $('#address').val(obj[4]);
-        $('#edit-modal').modal({show: true});
-        $('.form-edit').submit( async function(){
-            const temp = await fetch(`http://localhost:3000/admin/users/${obj[0]}`, {
-                method: 'PUT', redirect: 'follow'
-            });
-            temp.redirect('http://localhost:3000');
-        })
-    };
+	function confirmRemoval(id, resource) {
+		$('#confirm-delete-btn').click(async function(e) {
+			e.preventDefault();
+			$('#confirm-removal-modal').modal('toggle')
+
+			const res = await fetch(`http://localhost:3000/admin/${resource}/${id}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+			})
+
+			allRows(await res.json())
+		})
+
+		$('#confirm-removal-modal').modal({show: true});
+	}
+
+	
+
+	function renderRow(rowData) {
+		return `<tr class="row-${rowData.id}">
+					<td>${rowData.id}</td>
+					<td class="name">${rowData.name}</td>
+					<td class="gender">${rowData.gender}</td>
+					<td class="tel">${rowData.tel}</td>
+					<td class="birthday">${rowData.birthday}</td>
+					<td class="address">${rowData.address}</td>
+					<td>
+						<button
+							id='edit-btn'
+							class='btn btn-sm btn-primary'
+							onclick="editModal('${rowData.id}/${rowData.name}/${rowData.gender}/${rowData.tel}/${rowData.birthday}/${rowData.address}', ['name', 'gender', 'tel', 'birthday', 'address'])"
+						>Edit</button>
+						<button
+							id="delete-btn"
+							class='btn btn-sm btn-danger'
+							onclick="confirmRemoval(${rowData.id}, 'users')"
+						>Delete</button>
+					</td>
+				</tr>`
+	}
+
+	function allRows(rows) {
+		const html = rows.reduce((acc, row) => acc + renderRow(row), '')
+
+		$('#table-body').html(html)
+	}
+
+	function editModal(values, fields) {
+		values = values.split('/')
+		const id = values.shift()
+
+		fields.forEach((field, i) => {
+			$(`#${field}`).val(values[i])
+		})
+
+
+		$('.form-edit').submit(async function(e) {
+			e.preventDefault();
+			$('#edit-modal').modal('toggle')
+
+			const data = fields.reduce((acc, field) => {
+				let value
+
+				if (field === 'gender') {
+					value = $('#female').prop('checked') ? 'Nữ' : 'Nam'
+				} else {
+					value = $(`#${field}`).val()
+					console.log(value)
+				}
+
+				return {...acc, [field]: value}
+
+			}, {})
+			
+			const res = await fetch(`http://localhost:3000/admin/users/${id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+
+			$(`.row-${id}`).replaceWith(renderRow(await res.json()))
+		})
+
+
+		$('#edit-modal').modal({show: true});
+	}
 </script>
