@@ -1,23 +1,39 @@
-<table class="table table-hover mt-4">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody id="table-body">
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>   
-            <td></td>
-            <td>
-                <a id="edit-btn" class="btn btn-sm btn-primary" href="#" onclick="editModal()">Edit</a>
-                <a class="btn btn-sm btn-danger" onclick="confirmRemoval()" href="#" >Delete</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<section id='blog' class='mt-5'>
+	<h3 class='blog-heading'>Tin tức về Y tế</h3>
+	<a
+		class='btn btn-sm btn-primary'
+		onclick='confirmRemoval()'
+		href='#'
+	>Create</a>
+	<div class='blog-content'>
+		{{#if blogs}}
+			{{#each blogs}}
+				<div class='border-top border-bottom'>
+					<a class='blog-box media mb-2 py-3' href='{{this.url}}'>
+						<img
+							src='images/uploads/{{this.image}}'
+							alt='blog'
+							class='blog-box-img mr-3'
+						/>
+						<div class='blog-box-content media-body'>
+							<h5 class='blog-box-heading'>{{this.title}}</h5>
+							<p class='blog-box-text'>{{this.description}}</p>
+						</div>
+					</a>
+					<a
+						id='edit-btn'
+						class='btn btn-sm btn-primary'
+						href='#'
+						onclick='editModal()'
+					>Edit</a>
+					<a
+						class='btn btn-sm btn-danger'
+						onclick='confirmRemoval()'
+						href='#'
+					>Delete</a>
+				</div>
+
+			{{/each}}
+		{{/if}}
+	</div>
+</section>

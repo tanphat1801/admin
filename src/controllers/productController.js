@@ -22,7 +22,10 @@ exports.renderAllProducts = catchAsync(async (req, res, next) => {
 	const products = await getAllProduct();
 
 	if (req.originalUrl === '/products') {
-		res.render('products', { products });
+		const loggedIn = req.cookies.jwt || undefined;
+		res.render('products', { products, loggedIn });
+	} else if (req.originalUrl === '/admin/products') {
+		res.render('products', { layout: 'admin.hbs', products, admin: true });
 	} else {
 		req['products'] = products;
 		next();
@@ -39,7 +42,13 @@ exports.renderProductByCategory = catchAsync(async (req, res, next) => {
 	}
 
 	const products = await getProductByCategory(category);
-	res.render('products', { products });
+	const loggedIn = req.cookies.jwt || undefined;
+
+	if (req.originalUrl.startsWith('/admin')) {
+		res.render('products', { products, layout: 'admin.hbs', admin: true });
+	} else {
+		res.render('products', { products, loggedIn });
+	}
 });
 
 exports.addProduct = catchAsync(async (req, res, next) => {

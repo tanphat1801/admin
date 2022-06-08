@@ -30,7 +30,7 @@ exports.profile = catchAsync(async (req, res, next) => {
 		'birthday',
 	]);
 
-	res.send(user);
+	res.json(user);
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
@@ -39,12 +39,13 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 	user.update(req.body);
 	await user.save();
 
-	res.redirect('/admin/users');
+	res.json(user);
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
 	const user = await getInstanceById(User, req.params.id);
 
 	await user.destroy();
-	res.redirect('/admin/users');
+	const users = await User.findAll();
+	res.json(users);
 });
