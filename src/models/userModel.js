@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const Sequelize = require('sequelize');
 const db = require('../../utils/connectDB');
-
+const moment = require('moment');
 const User = db.define(
 	'User',
 	{
@@ -40,6 +40,9 @@ const User = db.define(
 			validate: {
 				isDate: true,
 			},
+			get() {
+				return moment(this.getDataValue('birthday')).format('YYYY-MM-DD')
+			}
 		},
 		username: {
 			type: Sequelize.STRING,
@@ -71,6 +74,8 @@ const hashedPassword = async (password) => await bcrypt.hash(password, 12);
 User.addHook('afterValidate', async (user, options) => {
 	user.password = await hashedPassword(user.password);
 });
+
+
 
 User.prototype.isCorrectPassword = async function (password) {
 	return await bcrypt.compare(password, this.password);

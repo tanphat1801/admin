@@ -7,15 +7,17 @@ const getInstanceById = require('../../utils/getInstanceById');
 const reduceReturnedData = require('../../utils/reduceReturnedData');
 
 exports.createBlog = catchAsync(async (req, res, next) => {
-	// req.body['image'] = req.files.image;
-	// checkRequiredFields(
-	// 	req.body,
-	// 	['image', 'title', 'description', 'url'],
-	// 	'create-blog'
-	// );
+	if (req.files.image) {
+		req.body['image'] = req.files.image;
+	}
+	checkRequiredFields(
+		req.body,
+		['image', 'title', 'description', 'url'],
+		'create-blog'
+	);
 
-	// const blogData = req.body;
-	// blogData.image = await uploadImage(req.files.image);
+	const blogData = req.body;
+	blogData.image = await uploadImage(req.files.image);
 	const blog = await Blog.create(req.body);
 	res.json(blog);
 });
@@ -44,6 +46,9 @@ exports.renderBlogsLimit = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBlog = catchAsync(async (req, res, next) => {
+	if (req.files.image) {
+		req.body['image'] = await uploadImage(req.files.image);
+	}
 	const blog = await getInstanceById(Blog, req.params.id);
 
 	blog.update(req.body);
@@ -57,5 +62,6 @@ exports.deleteBlog = catchAsync(async (req, res, next) => {
 
 	await blog.destroy();
 	const blogs = await Blog.findAll();
+	console.log(blogs)
 	res.json(blogs);
 });

@@ -1,39 +1,215 @@
 <section id='blog' class='mt-5'>
 	<h3 class='blog-heading'>Tin tức về Y tế</h3>
-	<a
-		class='btn btn-sm btn-primary'
-		onclick='confirmRemoval()'
-		href='#'
-	>Create</a>
-	<div class='blog-content'>
-		{{#if blogs}}
-			{{#each blogs}}
-				<div class='border-top border-bottom'>
-					<a class='blog-box media mb-2 py-3' href='{{this.url}}'>
-						<img
-							src='images/uploads/{{this.image}}'
-							alt='blog'
-							class='blog-box-img mr-3'
-						/>
-						<div class='blog-box-content media-body'>
-							<h5 class='blog-box-heading'>{{this.title}}</h5>
-							<p class='blog-box-text'>{{this.description}}</p>
-						</div>
-					</a>
-					<a
-						id='edit-btn'
-						class='btn btn-sm btn-primary'
-						href='#'
-						onclick='editModal()'
-					>Edit</a>
-					<a
-						class='btn btn-sm btn-danger'
-						onclick='confirmRemoval()'
-						href='#'
-					>Delete</a>
-				</div>
+	{{#if admin}}
+		<a
+			class='btn btn-sm btn-primary'
+			onclick='confirmRemoval()'
+			href='#'
+		>Create</a>
+	{{/if}}
+	<table class='table table-hover mt-4'>
+		<tbody id='table-body'>
+			{{#if blogs}}
+				{{#each blogs}}
+					<tr>
+						<td>
+							<a class='blog-box media mb-2 py-3' href='{{url}}'>
+								<img
+									src='images/uploads/{{image}}'
+									alt='blog'
+									class='blog-box-img mr-3'
+								/>
+								<div class='blog-box-content media-body'>
+									<h5 class='blog-box-heading'>{{title}}</h5>
+									<p class='blog-box-text'>{{description}}</p>
+								</div>
+							</a>
+						</td>
+						{{#if ../admin}}
+							<td>
+								<a
+									id='edit-btn'
+									class='btn btn-sm btn-primary'
+									href='#'
+									onclick="editModal('{{id}}${{url}}${{image}}${{title}}${{description}}', ['url', 'image', 'title', 'description'])"
+								>Edit</a>
+								<a
+									class='btn btn-sm btn-danger'
+									onclick="confirmRemoval({{id}}, 'blogs')"
+									href='#'
+								>Delete</a>
+						</td>
+					</tr>
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		</tbody>
+	</table>
+	
+	<div class='modal fade' id='edit-modal' role='dialog'>
+	<div class='modal-dialog modal-lg'>
 
-			{{/each}}
-		{{/if}}
+		<!-- Modal content-->
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h4 class='modal-title'>Edit</h4>
+				<button
+					type='button'
+					class='close'
+					data-dismiss='modal'
+				>&times;</button>
+			</div>
+			<div class='modal-body'>
+				<form class='w-100 mx-auto px-3 pt-3 form-edit' method='post' enctype="multipart/form-data">
+					<div class='form-group'>
+						<label for='image'>Image</label>
+						<input
+							value=''
+							name='image'
+							id='image'
+							type='file'
+							class='form-control'
+						/>
+					</div>
+					
+					<div class='form-group mt-3'>
+						<label for='title'>Title</label>
+						<input
+							value=''
+							name='title'
+							id='title'
+							type='text'
+							class='form-control'
+						/>
+					</div>
+					<div class='form-group mt-3'>
+						<label for='description'>Description</label>
+						<input
+							value=''
+							name='description'
+							id='description'
+							type='text'
+							class='form-control'
+						/>
+					</div>
+					<div class='form-group'>
+						<label for='url'>URL</label>
+						<input name='url' value='' id='url' type='text' class='form-control' />
+					</div>
+					<button class='btn btn-primary' type='submit'>Save</button>
+					<button
+						type='button'
+						class='btn btn-danger'
+						data-dismiss='modal'
+					>Close</button>
+				</form>
+			</div>
+			<div class='modal-footer'>
+
+			</div>
+		</div>
 	</div>
+</div>
+
+<script>
+	function editModal(values, fields) {
+		values = values.split('$')
+		const id = values.shift()
+
+		fields.forEach((field, i) => {
+			console.log(field, values[i])
+			if (field !== 'image') {
+				$(`#${field}`).val(values[i])}
+			
+		})
+
+
+		$('.form-edit').submit(async function(e) {
+			e.preventDefault();
+			$('#edit-modal').modal('toggle')
+
+			const data = fields.reduce((acc, field) => {
+				let value
+
+				if (field === 'gender') {
+					value = $('#female').prop('checked') ? 'Nữ' : 'Nam'
+				} else {
+					value = $(`#${field}`).val()
+					console.log(value)
+				}
+
+				return {...acc, [field]: value}
+
+			}, {})
+			
+			const res = await fetch(`http://localhost:3000/admin/blogs/${id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+
+			$(`.row-${id}`).replaceWith(renderRow(await res.json()))
+		})
+
+
+		$('#edit-modal').modal({show: true});
+	}
+
+	function confirmRemoval(id, resource) {
+		$('#confirm-delete-btn').click(async function(e) {
+			e.preventDefault();
+			$('#confirm-removal-modal').modal('toggle')
+
+			const res = await fetch(`http://localhost:3000/admin/${resource}/${id}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+			})
+
+			allRows(await res.json())
+		})
+
+		$('#confirm-removal-modal').modal({show: true});
+	}
+
+	function allRows(rows) {
+		const html = rows.reduce((acc, row) => acc + renderRow(row), '')
+
+		$('#table-body').html(html)
+	}
+
+	function renderRow(rowData) {
+		return `<tr>
+					<td>
+						<a class='blog-box media mb-2 py-3' href='${rowData.url}'>
+							<img
+								src='images/uploads/${rowData.image}'
+								alt='blog'
+								class='blog-box-img mr-3'
+							/>
+							<div class='blog-box-content media-body'>
+								<h5 class='blog-box-heading'>${rowData.title}</h5>
+								<p class='blog-box-text'>${rowData.description}</p>
+							</div>
+						</a>
+					</td>
+					<td>
+						<a
+							id='edit-btn'
+							class='btn btn-sm btn-primary'
+							href='#'
+							onclick="editModal('${rowData.id}/${rowData.url}/${rowData.image}/${rowData.title}/${rowData.description}', ['url', 'image', 'title', 'description'])"
+						>Edit</a>
+						<a
+							class='btn btn-sm btn-danger'
+							onclick="confirmRemoval(${rowData.id}, 'blogs')"
+							href='#'
+						>Delete</a>
+					</td>
+				</tr>`
+	}
+</script>
 </section>

@@ -1,5 +1,4 @@
 const express = require('express');
-const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const logger = require('morgan');
@@ -25,16 +24,13 @@ app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.static(`${__dirname}/public/`));
 
-// app.use('*', (req, res) => {
-// 	return res.send(req.method);
-// });
 app.use('/admin', adminRouter);
 app.use('/blogs', blogRouter);
 app.use('/products', productRouter);
 app.use('/shopping-cart', cartRouter);
 app.use('/', viewRouter, authRouter);
 app.all('*', (req, res, next) => {
-	return res.send(req.params.id);
+	console.log(req.url);
 	next(new AppError(404));
 });
 

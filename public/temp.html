@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+		/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	</head>
+	<body>
+		<form action="http://localhost:3000" class="form" method="post">
+			<input type="text" name="tel" id="" />
+			<input type="submit" value="submit" />
+		</form>
+
+		<script>
+			function editModal(obj, fields) {
+		console.log(fields)
+		obj = obj.split('/');
+		$('#name').val(obj[1]);
+		$('#gender').val(obj[2]);
+		$('#tel').val(obj[3]);
+		$('#birthday').val(obj[3]);
+		$('#address').val(obj[4]);
+
+		
+
+		$('.form-edit').submit(async function(e) {
+			e.preventDefault();
+					$('#edit-modal').modal('toggle')
+
+			const data = {
+				name: $('#name').val(),
+				gender: $('#gender').val(),
+				tel: $('#tel').val(),
+				birthday: $('#birthday').val(),
+				address: $('#address').val()
+			}
+
+			const res = await fetch(`http://localhost:3000/admin/users/${obj[0]}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+
+			const row = await res.json()
+			$(`.row-${obj[0]}`).replaceWith(
+						`<tr class="row-${obj[0]}"><td>${obj[0]}</td>
+					<td class="name">${row.name}</td>
+					<td class="gender">${row.gender}</td>
+					<td class="tel">${row.tel}</td>
+					<td class="birthday">${row.birthday}</td>
+					<td class="address">${row.address}</td>
+					<td>
+						<button
+							id='edit-btn'
+							class='btn btn-sm btn-primary'
+							onclick="editModal('${obj[0]}/${row.name}/${row.gender}/${row.tel}/${row.birthday}/${row.address}')"
+						>Edit</button>
+						<button
+							class='btn btn-sm btn-danger'
+							onclick='confirmRemoval(${obj[0]})'
+						>Delete</button>
+					</td></tr>`
+					)
+			
+		})
+
+		$('#edit-modal').modal({show: true});
+	};
+		</script>
+	</body>
+</html>

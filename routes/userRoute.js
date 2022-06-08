@@ -14,7 +14,7 @@ router.route('/').get(protect, restrictTo('admin'), renderAllUsers);
 
 router
 	.route('/:id')
-	.put(protect, restrictTo('admin'), updateUser)
+	.patch(protect, restrictTo('admin'), updateUser)
 	.delete(protect, restrictTo('admin'), deleteUser);
 
 module.exports = router;
